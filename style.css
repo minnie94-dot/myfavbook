@@ -1,0 +1,16 @@
+.hero-bg {
+    background-color: #DBDBDB;
+}
+
+.hero-bg h1:first-child {
+    font-family: "Sriracha", cursive;
+    color: #000000;
+}
+
+.hero-bg h1:last-child {
+    font-family: "Sriracha", cursive;
+    color: #590570 !important;
+}
+.navbar-brand {
+    color: #590570 !important;
+}
