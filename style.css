@@ -21,15 +21,6 @@ body {
     isolation: isolate;
 }
 
-.hero-bg h1:first-child {
-    font-family: 'Bai Jamjuree', sans-serif;
-    color: #000000;
-}
-
-.hero-bg h1:last-child {
-    font-family: 'Bai Jamjuree', sans-serif;
-    color: #590570 !important;
-}
 
 .hero-video {
     position: absolute;
@@ -50,6 +41,74 @@ body {
     z-index: 1;
     padding-top: 80px;
     padding-bottom: 80px;
+}
+/* ==========================================
+   HERO SECTION (Niramit Font & Pop-out Effects)
+   ========================================== */
+
+/* 1. เรียกใช้ฟอนต์ Niramit และจัดเลเยอร์พื้นหลัง */
+.hero-bg {
+    font-family: 'Niramit', sans-serif !important;
+    position: relative;
+    overflow: hidden;
+    background-color: #0d0212 !important; /* คุมโทนม่วงมืดลบนัยรอยต่อ */
+    isolation: isolate;
+}
+
+/* 2. เพิ่มแผ่นกรองมืดสีม่วงโปร่งแสงทับวิดีโอ (ช่วยดันข้อความให้เด้งออกมา) */
+.hero-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 2, 18, 0.45); /* ปรับความเข้มฉากหลังมืดลงเบาๆ */
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1; /* ดันเนื้อหาขึ้นมาอยู่เหนือแผ่นกรอง */
+}
+
+/* 3. จัดการข้อความ H1 สไตล์ Niramit + เงาสว่างเน้นข้อความ */
+.hero-bg h1 {
+    font-family: 'Niramit', sans-serif !important;
+}
+
+/* ข้อความอ้างอิง (ตัวบน) */
+.hero-bg h1.text-white {
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: 0.5px;
+    /* เรืองแสงม่วงสว่าง + เงาดำซ้อนหลังให้อ่านง่าย */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 
+                0 0 20px rgba(168, 66, 202, 0.6) !important;
+}
+
+/* หัวข้อหลัก (ตัวล่าง) */
+.hero-bg h1.display-5 {
+    font-weight: 700 !important;
+    color: #d8b4fe !important; /* ปรับเป็นสีม่วงอ่อนพาสเทลเน้นความเด่น */
+    letter-spacing: 1px;
+    /* เงาดำซ้อนหลัง 3 ชั้นเพื่อความคมชัดสูงสุดก้าวข้ามวิดีโอ */
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.95), 
+                0 0 25px rgba(168, 66, 202, 0.8) !important;
+}
+
+/* 4. ปรับรูปปกหนังสือให้ลอยโดดเด่นขึ้นมาจากวิดีโอ */
+.hero-bg img {
+    border: 1px solid rgba(168, 66, 202, 0.35);
+    /* เพิ่มเงาตกกระทบให้หนังสือดูมีมิติสามมิติ */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 
+                0 0 25px rgba(89, 5, 112, 0.5) !important;
+    transition: transform 0.4s ease;
+}
+
+.hero-bg img:hover {
+    transform: translateY(-6px) scale(1.02);
 }
 
 /* Responsive สำหรับ Hero Banner */
@@ -88,15 +147,41 @@ body {
     .hero-bg h1.display-5 { font-size: 28px; line-height: 1.4; }
 }
 
-/* =========================
-   STORY REVEAL SECTION (MINIMALIST)
-   ========================= */
+/* ==========================================
+   1. GLOBAL THEME VARIABLES
+   ========================================== */
+:root {
+    /* โทนสีพื้นหลังไล่ระดับตามความลึก (Seamless Depth) */
+    --bg-darkest: #0d0212;       /* ม่วงมืดสุด (สำหรับขอบล่าง/จุดเชื่อม) */
+    --bg-dark: #17041d;          /* ม่วงเข้มหลัก */
+    --bg-mid: #20082c;           /* ม่วงโทนกลางสำหรับกึ่งกลางเซกชัน */
+    
+    /* โทนสีการ์ดและกล่องแบบโปร่งแสง */
+    --card-bg: rgba(20, 5, 29, 0.65);
+    --border-purple: rgba(168, 66, 202, 0.25);
+    
+    /* โทนสีม่วงสำหรับข้อความและลูกเล่น */
+    --purple-main: #590570;
+    --purple-light: #a842ca;
+    --purple-subtle: #c9b0d3;
+    --purple-glow: rgba(168, 66, 202, 0.35);
+    
+    /* โทนสีข้อความ */
+    --text-primary: #f0eaf2;
+    --text-secondary: #e2d7e6;
+    --text-muted: #8a7a92;
+}
+
+/* ==========================================
+   2. STORY REVEAL SECTION
+   ========================================== */
 .story-container {
     font-family: 'Bai Jamjuree', sans-serif;
     height: 320vh;
     position: relative;
-    background: radial-gradient(circle at 50% 50%, #2e0938 0%, #17041d 60%, #0d0212 100%);
-    color: #f0eaf2;
+    /* ไล่สีให้ด้านล่างสุดจบด้วย --bg-dark เพื่อเชื่อมต่อกับเซกชันถัดไปได้สนิท */
+    background: radial-gradient(circle at 50% 40%, var(--bg-mid) 0%, var(--bg-dark) 70%, var(--bg-darkest) 100%);
+    color: var(--text-primary);
     overflow: hidden;
 }
 
@@ -117,10 +202,9 @@ body {
     pointer-events: none;
 }
 
-/* หัวข้อตัวใหญ่ สีม่วงหลัก #590570 ปรับให้สว่างคมชัด */
 .main-title {
     font-family: 'Chakra Petch', sans-serif;
-    color: #a842ca;
+    color: var(--purple-light);
     font-size: clamp(2.5rem, 6vw, 5rem);
     font-weight: 700;
     letter-spacing: 2px;
@@ -129,7 +213,7 @@ body {
 .sub-title {
     font-family: 'Bai Jamjuree', sans-serif;
     font-size: clamp(1.2rem, 2.8vw, 2rem);
-    color: #c9b0d3;
+    color: var(--purple-subtle);
     font-weight: 300;
     letter-spacing: 1px;
 }
@@ -149,13 +233,13 @@ body {
     line-height: 2.1;
     max-width: 720px;
     margin: 0 auto;
-    color: #e2d7e6;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    color: var(--text-secondary);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 2.5rem;
     border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-purple);
 }
 
 .story-text strong {
@@ -163,28 +247,44 @@ body {
     color: #ffffff;
 }
 
-/* =========================
-   CHARACTERS SECTION (MINIMALIST)
-   ========================= */
+.animated-title {
+    display: inline-block;
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 2px;
+    animation: floatText 4s ease-in-out infinite;
+    text-shadow: 0 0 15px var(--purple-glow);
+}
+
+@keyframes floatText {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+/* ==========================================
+   3. CHARACTER SECTION & CAROUSEL
+   ========================================== */
 .char-section {
-    background: #120317;
+    /* เริ่มสีด้วย --bg-darkest เพื่อต่อจากเซกชันบน แล้วค่อยๆ สว่างไป --bg-dark */
+    background: linear-gradient(180deg, var(--bg-darkest) 0%, var(--bg-dark) 100%);
     font-family: 'Bai Jamjuree', sans-serif;
+    padding: 5rem 0;
 }
 
 .char-section-title {
     font-family: 'Chakra Petch', sans-serif !important;
-    color: #a842ca !important;
+    color: var(--purple-light) !important;
     letter-spacing: 2px;
 }
 
 .custom-carousel {
     max-width: 860px;
     margin: 0 auto;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(8px);
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
     border-radius: 16px;
     padding: 1.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-purple);
     position: relative;
 }
 
@@ -202,104 +302,8 @@ body {
 
 .char-name {
     font-family: 'Chakra Petch', sans-serif !important;
-    color: #e2d7e6 !important;
+    color: var(--text-secondary) !important;
     letter-spacing: 2px;
-}
-
-/* ปุ่มกดสไลด์ มินิมอล วงกลมม่วงเรียบหรู */
-.custom-carousel .custom-btn {
-    width: 46px;
-    height: 46px;
-    background-color: rgba(89, 5, 112, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.85;
-    transition: all 0.3s ease;
-}
-
-.custom-carousel .carousel-control-prev { left: -15px; }
-.custom-carousel .carousel-control-next { right: -15px; }
-
-.custom-carousel .custom-btn:hover {
-    background-color: #590570;
-    border-color: #a842ca;
-    opacity: 1;
-}
-
-/* แหล่งที่มารูปภาพ */
-.source-credits {
-    font-size: 12px;
-    color: #8a7a92;
-}
-
-.source-credits a {
-    color: #a842ca;
-    text-decoration: none;
-}
-
-.source-credits a:hover {
-    text-decoration: underline;
-}
-/* CSS สำหรับ Micro-interactions & Minimal Style */
-
-/* การ์ดใน Section 3 */
-.feature-card {
-    background-color: #ffffff;
-    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-/* เส้น Accent สีม่วงซ่อนไว้ด้านบนการ์ด */
-.feature-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background-color: #590570;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s ease;
-}
-
-/* Effect ตอนนำเมาส์ไปชี้ (Hover) */
-.feature-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(89, 5, 112, 0.08) !important;
-    border-color: rgba(89, 5, 112, 0.2) !important;
-}
-
-.feature-card:hover::before {
-    transform: scaleX(1);
-}
-
-/* สีพื้นหลังแบบ Gradient สำหรับ Section 4 */
-.bg-brand-gradient {
-    background: linear-gradient(135deg, #590570 0%, #3d024e 100%);
-}
-/* ==========================================
-   ธีมสีม่วงเรียบหรูสไตล์มินิมอล (เข้าชุดกับของเพื่อน)
-   ========================================== */
-:root {
-    --bg-dark: #0a0c0d;
-    --card-bg: #14181b;
-    --border-color: #2a323d;
-    --purple-main: #590570;
-    --purple-light: #a842ca;
-    --purple-glow: rgba(89, 5, 112, 0.3);
-}
-
-/* 1. ปุ่มกดสไลด์ มินิมอล วงกลมม่วงเรียบหรู (ตามสเปกของเพื่อน) */
-.custom-carousel {
-    position: relative;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    background-color: var(--card-bg);
 }
 
 .custom-carousel .custom-btn {
@@ -325,35 +329,58 @@ body {
     background-color: var(--purple-main);
     border-color: var(--purple-light);
     opacity: 1;
-    box-shadow: 0 0 12px rgba(168, 66, 202, 0.4);
+    box-shadow: 0 0 12px var(--purple-glow);
 }
 
-/* 2. หัวข้อสีม่วง/ขาว พร้อมลูกเล่นตัวอักษรขยับได้ */
-.animated-title {
-    display: inline-block;
-    color: #ffffff;
-    font-weight: 800;
-    letter-spacing: 2px;
-    animation: floatText 4s ease-in-out infinite;
-    text-shadow: 0 0 15px rgba(168, 66, 202, 0.3);
+.source-credits {
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
-@keyframes floatText {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
+.source-credits a {
+    color: var(--purple-light);
+    text-decoration: none;
 }
 
-/* 3. การ์ดประเด็นสำคัญและหัวข้อเน้นสีม่วงเรียบหรูให้ตรงกับเพื่อน */
+.source-credits a:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================
+   4. CARDS & SEAMLESS BACKGROUND SECTIONS
+   ========================================== */
 .feature-card, .minimal-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
+    background: var(--card-bg) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border-purple) !important;
+    backdrop-filter: blur(8px);
+    transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--purple-light);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
 }
 
 .feature-card:hover, .minimal-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px var(--purple-glow) !important;
     border-color: var(--purple-light) !important;
-    transform: translateY(-4px);
-    box-shadow: 0 4px 20px rgba(89, 5, 112, 0.25);
+}
+
+.feature-card:hover::before {
+    transform: scaleX(1);
 }
 
 .card-title-purple {
@@ -361,26 +388,92 @@ body {
     font-weight: 700;
 }
 
-/* 4. พื้นหลังเถาวัลย์และดอกไม้พิษเลื้อย (Sunrise Poison Flora Theme) */
+/* ปรับส่วน Background ให้ฟุ้งละมุน ไม่เห็นขอบตัด */
+.bg-brand-gradient {
+    background: linear-gradient(180deg, var(--bg-dark) 0%, var(--purple-main) 50%, var(--bg-darkest) 100%);
+}
+
 .poison-vines-bg {
     position: relative;
     background-color: var(--bg-dark);
     background-image: 
-        radial-gradient(circle at 10% 20%, rgba(89, 5, 112, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(45, 90, 39, 0.15) 0%, transparent 50%);
+        radial-gradient(circle at 30% 30%, rgba(168, 66, 202, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(89, 5, 112, 0.2) 0%, transparent 60%);
 }
 
-.poison-vines-bg::before {
-    content: "";
+
+/*section3 */
+/* ==========================================
+   1. สีพื้นหลังเดียวกันทั้งเว็บ (ลบรอยต่อ 100%)
+   ========================================== */
+body, 
+.story-container, 
+.char-section, 
+.poison-vines-bg,
+section, 
+section.container {
+    background: #0d0212 !important;
+    background-color: #0d0212 !important;
+    background-image: none !important;
+}
+
+.story-container {
+    font-family: 'Bai Jamjuree', sans-serif;
+    height: 320vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.char-section {
+    font-family: 'Bai Jamjuree', sans-serif;
+    padding: 4rem 0;
+}
+
+/* ==========================================
+   2. ลูกเล่นการ์ด 4 อัน (คงลูกเล่นเด้ง + แสงวิ่ง)
+   ========================================== */
+.purple-dark-card {
+    background: linear-gradient(145deg, #160824, #0b0412) !important;
+    border: 1px solid rgba(168, 66, 202, 0.25) !important;
+    
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.4s ease, 
+                border-color 0.4s ease;
+    
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
+}
+
+.purple-dark-card .card-title-purple {
+    transition: transform 0.3s ease;
+}
+
+/* Hover Animation */
+.purple-dark-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: #a842ca !important;
+    box-shadow: 0 16px 35px rgba(89, 5, 112, 0.45);
+}
+
+.purple-dark-card:hover .card-title-purple {
+    transform: scale(1.03);
+}
+
+/* แสงสะท้อนวิ่งผ่านการ์ด (Shimmer) */
+.purple-dark-card::after {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.15;
+    top: -50%;
+    left: -60%;
+    width: 40%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.08);
+    transform: rotate(30deg);
+    transition: all 0.65s ease;
     pointer-events: none;
-    /* ลายเส้นเถาวัลย์เลื้อยและดอกไม้พิษ */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 100 100'%3E%3Cpath d='M10,90 Q30,40 50,70 T90,10' stroke='%2523a842ca' stroke-width='1.2' fill='none'/%3E%3Cpath d='M20,10 Q60,50 80,90' stroke='%252322c55e' stroke-width='1' fill='none'/%3E%3Ccircle cx='50' cy='70' r='3' fill='%2523a842ca'/%3E%3Ccircle cx='80' cy='90' r='2.5' fill='%252348bb78'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    z-index: 1;
+}
+
+.purple-dark-card:hover::after {
+    left: 130%;
 }
